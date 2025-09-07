@@ -1,0 +1,26 @@
+---
+import Layout from "../../shared/Layout.astro";
+import Giscus from "../../shared/Giscus.astro";
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug.split('/') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout title={post.data.title}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <p style="opacity:.7">{new Date(post.data.date).toLocaleDateString('zh-CN')}</p>
+    <Content />
+  </article>
+  <hr style="margin:2rem 0; opacity:.2" />
+  <Giscus />
+</Layout>
