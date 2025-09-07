@@ -2,6 +2,7 @@
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 const withBase = (p: string) => `${base}${String(p).replace(/^\/+/,'')}`;
+const enableHypothesis = import.meta.env.PUBLIC_ENABLE_HYPOTHESIS !== 'false';
 ---
 <html lang="zh-CN">
   <head>
@@ -18,5 +19,8 @@ const withBase = (p: string) => `${base}${String(p).replace(/^\/+/,'')}`;
     <main>
       <slot />
     </main>
+    { enableHypothesis && (
+      <script async src="https://hypothes.is/embed.js"></script>
+    )}
   </body>
 </html>
