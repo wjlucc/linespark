@@ -15,7 +15,8 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 ---
 
-<Layout title={post.data.title}>
+<Layout>
+  <fragment slot="title">{post.data.title}</fragment>
   <article>
     <h1>{post.data.title}</h1>
     <p style="opacity:.7">{new Date(post.data.date).toLocaleDateString('zh-CN')}</p>
