@@ -3,12 +3,15 @@ name: Comment Commands
 on:
   discussion_comment:
     types: [created]
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: write
   pages: write
   id-token: write
   discussions: read
+  issues: read
 
 concurrency:
   group: comment-commands
@@ -35,7 +38,7 @@ jobs:
             echo "do_rebuild=false" >> $GITHUB_OUTPUT
             exit 0
           fi
-          CMD=$(echo "$BODY" | sed -n 's/^\s*\(\/[^\s]*\).*/\1/p' | head -n1)
+          CMD=$(echo "$BODY" | sed -n 's/^\s*\(\/[^^[:space:]]*\).*/\1/p' | head -n1)
           echo "Command: $CMD"
           case "$CMD" in
             "/rebuild") echo "do_rebuild=true" >> $GITHUB_OUTPUT ;;

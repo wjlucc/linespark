@@ -20,8 +20,79 @@ const { Content } = await post.render();
   <article>
     <h1>{post.data.title}</h1>
     <p style="opacity:.7">{new Date(post.data.date).toLocaleDateString('zh-CN')}</p>
-    <Content />
+    <div id="post-body">
+      <Content />
+    </div>
   </article>
   <hr style="margin:2rem 0; opacity:.2" />
   <Giscus />
+
+  <style>
+    #post-body p { position: relative; }
+    #post-body .inline-comment-link {
+      position: absolute;
+      right: -0.5rem;
+      top: -0.75rem;
+      transform: translateY(-100%);
+      font-size: 12px;
+      opacity: .5;
+      text-decoration: none;
+      border: 1px solid currentColor;
+      padding: 0 .25rem;
+      border-radius: 3px;
+    }
+    #post-body .inline-comment-link:hover { opacity: .9; }
+    .toast-inline-copy {
+      position: fixed; left: 50%; top: 1.5rem; transform: translateX(-50%);
+      background: rgba(0,0,0,.8); color: #fff; padding: .5rem .75rem; border-radius: 4px; font-size: 12px;
+      z-index: 9999;
+    }
+  </style>
+
+  <script>
+    (function () {
+      const body = document.getElementById('post-body');
+      if (!body) return;
+      const paras = Array.from(body.querySelectorAll('p'));
+      let idx = 0;
+      paras.forEach((p) => {
+        // 跳过空段落
+        if (!p.textContent || !p.textContent.trim()) return;
+        idx += 1;
+        const id = p.id || `p-${idx}`;
+        p.id = id;
+        const a = document.createElement('a');
+        a.className = 'inline-comment-link';
+        a.href = `#${id}`;
+        a.textContent = '评论此段';
+        a.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const url = `${location.origin}${location.pathname}#${id}`;
+          try {
+            await navigator.clipboard.writeText(url);
+            showToast('已复制段落链接到剪贴板，粘贴到下方评论中即可。');
+          } catch (err) {
+            // 兼容性兜底
+            prompt('复制以下链接到评论中：', url);
+          }
+          // 设置地址栏锚点，便于分享
+          location.hash = id;
+          // 滚动到 giscus 评论区域
+          const giscusFrame = document.querySelector('.giscus-frame');
+          if (giscusFrame) giscusFrame.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        p.appendChild(a);
+      });
+
+      function showToast(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast-inline-copy';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => {
+          t.remove();
+        }, 2000);
+      }
+    })();
+  </script>
 </Layout>
