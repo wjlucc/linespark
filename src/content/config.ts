@@ -7,7 +7,7 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     summary: z.string().optional(),
-    slug: z.string().optional(),
+    // removed: slug is reserved by Astro and must not appear in schema
   })
 });
 
