@@ -11,4 +11,4 @@ permissions:
 
 jobs:
   call-build-deploy:
-    uses: ./.github/workflows/build_deploy.yml
+    uses: wjlucc/linespark/.github/workflows/build_deploy.yml@main
