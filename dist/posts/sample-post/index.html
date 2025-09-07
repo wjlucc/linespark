@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/linespark/favicon.svg"><title><slot name="title" /></title></head> <body style="max-width: 720px; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, " Apple Color Emoji", "Segoe UI Emoji";"> <nav style="display:flex; gap:1rem; margin-bottom:2rem;"> <a href="/linespark/">首页</a> <a href="/linespark/posts/">文章</a> </nav> <main>   <article> <h1>用 Astro + GitHub Pages 搭建博客：从 0 到 1</h1> <p style="opacity:.7">2025/9/8</p> <p>欢迎来到我的新博客！这是一篇示例文章，用来验证：</p>
+<ul>
+<li>内容集合 schema 的约束是否正常（date 为 Date 类型，tags 为字符串数组）。</li>
+<li>列表页 /posts/ 是否能正确列出并链接到详情页。</li>
+<li>GitHub Pages 项目站点（/linespark/）下的 BASE_URL 路径是否正确拼接，避免 404。</li>
+</ul>
+<p>小结：</p>
+<ul>
+<li>新文章放在 src/content/posts/</li>
+<li>Frontmatter 格式如上；未写 slug 时，将使用文件名生成 slug：sample-post</li>
+<li>访问路径将是 /posts/sample-post/</li>
+</ul>
+<p>如果你看到了这篇文章并能在 GitHub Pages 上顺利打开，说明一切配置都已就绪！</p> </article> <hr style="margin:2rem 0; opacity:.2"> <script src="https://giscus.app/client.js" data-repo="wjlucc/linespark" data-repo-id="R_kgDOPrejTg" data-category="General" data-category-id="DIC_kwDOPrejTs4CvGop" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>  </main> </body></html>
