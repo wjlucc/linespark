@@ -1,0 +1,14 @@
+name: Build & Deploy on Push
+
+on:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  call-build-deploy:
+    uses: ./.github/workflows/build_deploy.yml

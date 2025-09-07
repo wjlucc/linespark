@@ -1,0 +1,76 @@
+name: Comment Commands
+
+on:
+  discussion_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  discussions: read
+
+concurrency:
+  group: comment-commands
+  cancel-in-progress: true
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    outputs:
+      do_rebuild: ${{ steps.out.outputs.do_rebuild }}
+    steps:
+      - name: Decide from comment
+        id: out
+        env:
+          BODY: ${{ github.event.comment.body }}
+          AUTHOR_ASSOC: ${{ github.event.comment.author_association }}
+          AUTHOR_LOGIN: ${{ github.event.comment.user.login }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          echo "Comment by: $AUTHOR_LOGIN ($AUTHOR_ASSOC)"
+          # 仅允许仓库所有者执行敏感命令
+          if [ "$AUTHOR_LOGIN" != "$OWNER" ]; then
+            echo "Only repository owner can trigger commands. Skipping." 
+            echo "do_rebuild=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          CMD=$(echo "$BODY" | sed -n 's/^\s*\(\/[^\s]*\).*/\1/p' | head -n1)
+          echo "Command: $CMD"
+          case "$CMD" in
+            "/rebuild") echo "do_rebuild=true" >> $GITHUB_OUTPUT ;;
+            *) echo "do_rebuild=false" >> $GITHUB_OUTPUT ;;
+          esac
+
+  build:
+    needs: parse
+    if: needs.parse.outputs.do_rebuild == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: needs.parse.outputs.do_rebuild == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
