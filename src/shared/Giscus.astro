@@ -1,9 +1,9 @@
 ---
 // 将以下占位符替换为你的仓库信息与分类，待你启用 Discussions 后我将指导你填入。
-const repo = Astro.props.repo ?? "<your-username>/<your-repo>"; // e.g. user/linespark
-const repoId = Astro.props.repoId ?? ""; // 需要从 Giscus 安装页复制
+const repo = Astro.props.repo ?? "wjlucc/linespark"; // e.g. user/linespark
+const repoId = Astro.props.repoId ?? "R_kgDOPrejTg"; // 来自 giscus.app
 const category = Astro.props.category ?? "General"; // Discussions 分类名
-const categoryId = Astro.props.categoryId ?? ""; // 需要从 Giscus 安装页复制
+const categoryId = Astro.props.categoryId ?? "DIC_kwDOPrejTs4CvGop"; // 来自 giscus.app
 ---
 
 <script src="https://giscus.app/client.js"
@@ -12,7 +12,7 @@ const categoryId = Astro.props.categoryId ?? ""; // 需要从 Giscus 安装页�
   data-category={category}
   data-category-id={categoryId}
   data-mapping="pathname"
-  data-strict="1"
+  data-strict="0"
   data-reactions-enabled="1"
   data-emit-metadata="0"
   data-input-position="bottom"
